@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="dahuiji.css" />
+</head>
+<body>
+    <div id="body_main" class="main">
+        <ul id="options" class="options">
+            <li value="1">超级困难</li>
+            <li value="2">非常困难</li>
+            <li value="3">比较困难</li>
+            <li value="4">就选我吧</li>
+        </ul>
+        <script src="js/jquery-3.2.1.js"></script>
+        <script>
+            
+            +function($){
+                function Plane(){}
+                $.extend(Plane.prototype,{
+                    init:function(){
+                        this.main = $("#body_main");
+                        this.option = $("#options");
+                        this.oli = $("li")
+                        this.handleevent()
+                    },
+                    handleevent:function(){
+                        this.oli.on("click",$.proxy(this.mainmove,this))
+                    },
+                    mainmove:function(event){
+                        // alert("1")
+                        var target = event.target || event.srcElement;
+                        this.index = $(target).index();
+                        // console.log($(target).index())
+                        this.option.remove()
+                        var logo = createElem("logo");
+                        logo.slideDown();
+                        var loading = createElem("loading");
+                        loading.fadeIn();
+                        var index = 0;
+                        this.loadtimer = setInterval(function(){
+                            loading.css({
+                                background:"url(images/loading"+(++index%3+1)+".png)"
+                            })
+                        },500)
+                        //背景图片动画
+                        this.bgtimer = setInterval($.proxy(function(){
+                            this.main.css({
+                                backgroundPositionY:"+=10"
+                            })
+                        },this),80)
+                        this.movestop = setTimeout($.proxy(function(){
+                            loading.fadeOut()
+                            logo.fadeOut()
+                        },this),1000)
+                        this.flyplane()
+                    },
+                    flyplane:function(){
+                        var fli = createElem("my-warplain");
+                    }
+                })
+                function createElem(className){
+                var ele = $("<div></div>");
+                ele.addClass(className);
+                ele.hide()
+                $("body").append(ele);
+                return ele;
+                }   
+                var plane = new Plane();
+                plane.init()
+            }(jQuery)
+            
+        </script>
+</div>
+</body>
+</html>
